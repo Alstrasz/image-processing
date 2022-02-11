@@ -20,7 +20,7 @@ export class Image {
     }
 
     get_pixel ( x: number, y: number ): PxColor {
-        if ( x > this.width || y > this.height ) {
+        if ( x >= this.width || y >= this.height || x < 0 || y < 0 ) {
             throw new Error( `Out of bounds [x, y] [${x},${y}] not in ${this.width}x${this.height}` );
         }
         const pos = y * ( this.width * 4 ) + x * 4;
@@ -28,7 +28,7 @@ export class Image {
     }
 
     set_pixel ( x: number, y: number, { r, g, b, a }: PxColor ): void {
-        if ( x > this.width || y > this.height ) {
+        if ( x > this.width || y > this.height || x < 0 || y < 0 ) {
             throw new Error( `Out of bounds [x, y] [${x},${y}] not in ${this.width}x${this.height}` );
         }
         const pos = y * ( this.width * 4 ) + x * 4;

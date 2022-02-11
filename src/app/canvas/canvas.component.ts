@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { Image } from './helpers/image';
+import { RightShape } from './helpers/right_shape';
 
 @Component( {
     selector: 'app-canvas',
@@ -33,6 +34,10 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     click_fill () {
         // this.image_helper.fill_gs( 127 );
         this.image_helper.draw_line( this.input_1, this.input_2, this.input_3, this.input_4, { r: 0, g: 100, b: 0, a: 255 } );
+
+        const sh = new RightShape( this.input_1, this.input_2, this.input_3, { x: this.input_4, y: this.input_4 } );
+        sh.draw( this.image_helper );
+
         this.image_helper.apply();
     }
 }
