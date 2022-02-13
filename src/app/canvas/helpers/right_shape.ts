@@ -5,7 +5,8 @@ export class RightShape {
     number_of_vertices: number = 3;
     radius = 5;
 
-    constructor ( number_of_vertices: number,
+    constructor (
+        number_of_vertices: number,
         radius: number,
         public rotation: number = 0,
         public pos = { x: 0, y: 0 },
@@ -33,12 +34,16 @@ export class RightShape {
         this.rotation = new_val;
     }
 
+    set_pos ( new_val: { x: number, y: number } ) {
+        this.pos = new_val;
+    }
+
     get_vertices () {
         const vertices = [];
         for ( let i = 0; i < this.number_of_vertices; i++ ) {
             vertices.push( {
-                x: Math.round( this.pos.x + Math.cos( i / this.number_of_vertices * Math.PI * 2 ) * this.radius ),
-                y: Math.round( this.pos.y + Math.sin( i / this.number_of_vertices * Math.PI * 2 ) * this.radius ),
+                x: Math.round( this.pos.x + Math.cos( i / this.number_of_vertices * Math.PI * 2 + this.rotation ) * this.radius ),
+                y: Math.round( this.pos.y + Math.sin( i / this.number_of_vertices * Math.PI * 2 + this.rotation ) * this.radius ),
             } );
         }
         return vertices;

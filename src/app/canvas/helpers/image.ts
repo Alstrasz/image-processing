@@ -117,9 +117,9 @@ export class Image {
                 // dx -= 1;
                 if ( d < 0 ) {
                     d += dy;
-                    console.log( 1 );
+                    // console.log( 1 );
                 } else {
-                    console.log( 2 );
+                    // console.log( 2 );
                     d += dy - dx;
                     y += 1;
                     // dy -= 1;
@@ -149,16 +149,16 @@ export class Image {
                 // dy -= 1;
                 if ( d < 0 ) {
                     d += dx;
-                    console.log( 3 );
+                    // console.log( 3 );
                 } else {
                     d += dx - dy;
                     x += 1;
-                    console.log( 4 );
+                    // console.log( 4 );
                     // dx -= 1;
                 }
                 this.set_pixel( mirrored ? 2 * x1 - x : x, y, color );
             }
-            console.log( x1, x2 );
+            // console.log( x1, x2 );
         }
     }
     apply ( dx: number = 0, dy: number = 0, context?: CanvasRenderingContext2D ) {
