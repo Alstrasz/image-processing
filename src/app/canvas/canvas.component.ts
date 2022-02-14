@@ -13,10 +13,10 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     @ViewChild( 'canvas' ) canvas!: ElementRef<HTMLCanvasElement>;
     context!: CanvasRenderingContext2D;
     image_helper!: Image;
-    input_1: number = 0.1;
-    input_2: number = 5;
-    input_3: number = 100;
-    input_4: number = 200;
+    input_1: number = 0.01;
+    input_2: number = 2;
+    input_3: number = 16;
+    input_4: number = 0.01;
 
     scene!: Scene;
 
@@ -51,8 +51,39 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
         this.image_helper.apply();
         */
-        this.scene.delta_rotation = this.input_1;
-        this.scene.delta_location = this.input_2;
+        this.scene.shape_delta_rotation = this.input_1;
+        this.scene.shape_delta_location = this.input_2;
         this.scene.tick_interval = this.input_3;
+        this.scene.path_delta_rotation = this.input_4;
+    }
+
+    canvas_mouse_down ( event: MouseEvent ) {
+        const pos = {
+            x: event.x - ( ( event.target as HTMLCanvasElement )?.offsetLeft || 0 ),
+            y: event.y - ( ( event.target as HTMLCanvasElement )?.offsetTop || 0 ),
+        };
+        if ( this.scene ) {
+            this.scene.vertex_select( pos );
+        }
+    }
+
+    canvas_mouse_move ( event: MouseEvent ) {
+        const pos = {
+            x: event.x - ( ( event.target as HTMLCanvasElement )?.offsetLeft || 0 ),
+            y: event.y - ( ( event.target as HTMLCanvasElement )?.offsetTop || 0 ),
+        };
+        if ( this.scene ) {
+            this.scene.vertex_drag( pos );
+        }
+    }
+
+    canvas_mouse_up ( event: MouseEvent ) {
+        const pos = {
+            x: event.x - ( ( event.target as HTMLCanvasElement )?.offsetLeft || 0 ),
+            y: event.y - ( ( event.target as HTMLCanvasElement )?.offsetTop || 0 ),
+        };
+        if ( this.scene ) {
+            this.scene.vertes_release( pos );
+        }
     }
 }

@@ -40,6 +40,7 @@ export class MovementPath extends ArbitraryShape {
     }
 
     get_pos_on_path ( length: number ): Dot {
+        this.set_dots( this.vertices_to_pos() );
         length = this.mod_by_path_length( length );
         let current = 0;
         while ( this.dots[current].len_from_start <= length ) {

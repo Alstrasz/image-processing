@@ -1,4 +1,5 @@
 import { Shape } from './abstract_shape';
+import { pifagor_distance } from './ev_functions';
 import { Image, PxColor, Dot } from './image';
 
 export interface VertexInfo {
@@ -47,8 +48,29 @@ export class ArbitraryShape implements Shape {
                 y: Math.round( this.pos.y + Math.sin( vertex.rotation + this.rotation ) * vertex.radius ),
             } );
         }
-        console.log( ret, this.vertices );
         return ret;
+    }
+
+    update_vertex ( id: number, new_val: VertexInfo ): void {
+        this.vertices[id] = new_val;
+    }
+
+    get_vertex_from_pos ( pos: Dot ): VertexInfo {
+        const rad = pifagor_distance( pos.x, pos.y, this.pos.x, this.pos.y );
+        return {
+            radius: rad,
+            rotation: Math.acos( ( pos.x - this.pos.x ) / rad ) * Math.sign( Math.asin( ( pos.y - this.pos.y ) / rad ) ) - this.rotation,
+        };
+    }
+
+    get_vertex_id_by_pos ( pos: Dot, radius_threshold: number ): number | null {
+        const vertices = this.vertices_to_pos();
+        for ( let i = 0; i < vertices.length; i++ ) {
+            if ( pifagor_distance( pos.x, pos.y, vertices[i].x, vertices[i].y ) <= radius_threshold ) {
+                return i;
+            }
+        }
+        return null;
     }
 
     draw ( image: Image ) {

@@ -1,14 +1,22 @@
 import { MovementPath } from './movement_path';
-import { Image } from './image';
+import { Dot, Image } from './image';
 import { Shape } from './abstract_shape';
+import { ArbitraryShape } from './arbitrary_shape';
 
 export class Scene {
-    delta_rotation: number = 0;
-    delta_location: number = 0;
-    current_location = 0;
-    current_rotation = 0;
-    tick_interval: number = 100;
+    shape_delta_rotation: number = 0;
+    shape_delta_location: number = 0;
+    shape_current_location: number = 0;
+    shape_current_rotation: number = 0;
+    path_delta_rotation: number = 0;
+    path_current_rotation: number = 0;
+    tick_interval: number = 16;
     private tick_timeout!: NodeJS.Timeout;
+
+    selected_vertex: {
+        id: number | null,
+        obj: ArbitraryShape | null,
+    } = { id: null, obj: null };
 
     constructor (
         public shape: Shape,
@@ -19,17 +27,21 @@ export class Scene {
     }
 
     draw ( ) {
-        this.image.fill_gs( 0 );
+        this.image.fill_gs( 50 );
         this.shape.draw( this.image );
         this.path.draw( this.image );
     }
 
     tick () {
-        this.current_rotation += this.delta_rotation;
-        this.current_location += this.delta_location;
+        this.shape_current_rotation += this.shape_delta_rotation;
+        this.shape_current_location += this.shape_delta_location;
 
-        this.shape.set_rotation( this.current_rotation );
-        this.shape.set_pos( this.path.get_pos_on_path( this.current_location ) );
+        this.path_current_rotation += this.path_delta_rotation;
+
+        this.shape.set_rotation( this.shape_current_rotation );
+        this.shape.set_pos( this.path.get_pos_on_path( this.shape_current_location ) );
+
+        this.path.set_rotation( this.path_current_rotation );
     }
 
     set_tick_timeout () {
@@ -48,5 +60,42 @@ export class Scene {
             }
             this.set_tick_timeout();
         }, this.tick_interval );
+    }
+
+    vertex_select ( pos: Dot ) {
+        let s = this.path.get_vertex_id_by_pos( pos, 10 );
+        if ( s != null ) {
+            this.selected_vertex = {
+                id: s,
+                obj: this.path,
+            };
+            return;
+        }
+        if ( this.shape instanceof ArbitraryShape ) {
+            s = this.shape.get_vertex_id_by_pos( pos, 15 );
+            if ( s != null ) {
+                this.selected_vertex = {
+                    id: s,
+                    obj: this.shape,
+                };
+                return;
+            }
+        }
+    }
+
+    vertex_drag ( pos: Dot ) {
+        if ( this.selected_vertex.id == null || this.selected_vertex.obj == null ) {
+            return;
+        }
+        this.selected_vertex.obj.update_vertex( this.selected_vertex.id, this.selected_vertex.obj.get_vertex_from_pos( pos ) );
+    }
+
+    vertes_release ( pos: Dot ) {
+        if ( this.selected_vertex.id == null || this.selected_vertex.obj == null ) {
+            return;
+        }
+        this.selected_vertex.obj.update_vertex( this.selected_vertex.id, this.selected_vertex.obj.get_vertex_from_pos( pos ) );
+        this.selected_vertex.obj = null;
+        this.selected_vertex.id = null;
     }
 }
