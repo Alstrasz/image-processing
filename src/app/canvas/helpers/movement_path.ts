@@ -1,10 +1,6 @@
+import { ArbitraryShape } from './arbitrary_shape';
 import { pifagor_distance } from './ev_functions';
-import { Image, PxColor } from './image';
-
-export interface Dot {
-    x: number,
-    y: number
-}
+import { PxColor, Dot } from './image';
 
 export interface DotInfo {
     pos: Dot,
@@ -12,16 +8,17 @@ export interface DotInfo {
     len_from_start: number,
 }
 
-export class MovementPath {
+export class MovementPath extends ArbitraryShape {
     dots: Array<DotInfo> = [];
 
     constructor (
         center_pos: Dot,
         radius: number,
         number_of_dots: number,
-        public color: PxColor = { r: 0, g: 200, b: 0, a: 255 },
+        color: PxColor = { r: 0, g: 200, b: 0, a: 255 },
     ) {
-        this.gen_dots( center_pos, radius, number_of_dots );
+        super( number_of_dots, radius, 0, center_pos, color );
+        this.set_dots( this.vertices_to_pos() );
     }
 
     set_dots ( dots: Array<Dot> ) {
@@ -38,20 +35,6 @@ export class MovementPath {
         console.log( this.dots );
     }
 
-    gen_dots ( cneter: Dot, radius: number, number_of_dots: number ) {
-        if ( number_of_dots < 3 ) {
-            throw new Error( `Not enough dots: ${number_of_dots} must be more then 2` );
-        }
-        const dots: Array<Dot> = [];
-        for ( let i = 0; i < number_of_dots; i++ ) {
-            dots.push( {
-                x: Math.round( cneter.x + Math.cos( i / number_of_dots * Math.PI * 2 ) * ( radius - Math.random() * radius * 0.4 ) ),
-                y: Math.round( cneter.y + Math.sin( i / number_of_dots * Math.PI * 2 ) * ( radius - Math.random() * radius * 0.4 ) ),
-            } );
-        }
-        this.set_dots( dots );
-    }
-
     mod_by_path_length ( length: number ) {
         return length % ( this.dots[this.dots.length - 1].len_from_start ); ;
     }
@@ -66,15 +49,5 @@ export class MovementPath {
         const to = this.dots[( current + 1 ) % this.dots.length].pos;
         const percent = ( length - ( this.dots[current].len_from_start - this.dots[current].len_from_prev ) ) / this.dots[current].len_from_prev;
         return { x: from.x + ( to.x - from.x ) * percent, y: from.y + ( to.y - from.y ) * percent };
-    }
-
-    draw ( image: Image ) {
-        for ( let i = 0; i < this.dots.length; i ++ ) {
-            try {
-                image.draw_line( this.dots[i].pos.x, this.dots[i].pos.y, this.dots[( i + 1 ) % this.dots.length].pos.x, this.dots[( i + 1 ) % this.dots.length].pos.y, this.color );
-            } catch {
-                console.log( `Cannot draw line (${this.dots[i].pos.x}, ${this.dots[i].pos.y})(${this.dots[( i + 1 ) % this.dots.length].pos.x}, ${this.dots[( i + 1 ) % this.dots.length].pos.y})` );
-            }
-        }
     }
 }

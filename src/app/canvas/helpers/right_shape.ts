@@ -1,7 +1,8 @@
+import { Shape } from './abstract_shape';
 import { Image, PxColor } from './image';
 
 
-export class RightShape {
+export class RightShape implements Shape {
     number_of_vertices: number = 3;
     radius = 5;
 
@@ -25,7 +26,7 @@ export class RightShape {
 
     set_radius ( new_val: number ) {
         if ( new_val < 1 ) {
-            throw new Error( `Number of verices is too small ${new_val}` );
+            throw new Error( `Radius is too small ${new_val}` );
         }
         this.radius = new_val;
     }
@@ -53,9 +54,9 @@ export class RightShape {
         const vertices = this.get_vertices();
         for ( let i = 0; i < vertices.length; i ++ ) {
             try {
-                image.draw_line( vertices[i].x, vertices[i].y, vertices[( i + 1 ) % vertices.length].x, vertices[( i + 1 ) % vertices.length].y, this.color );
-            } catch {
-                console.log( `Cannot draw line (${vertices[i].x}, ${vertices[i].y})(${vertices[( i + 1 ) % vertices.length].x}, ${vertices[( i + 1 ) % vertices.length].y})` );
+                image.draw_line( { x: vertices[i].x, y: vertices[i].y }, { x: vertices[( i + 1 ) % vertices.length].x, y: vertices[( i + 1 ) % vertices.length].y }, this.color );
+            } catch ( e ) {
+                console.log( `Right shape: Cannot draw line (${vertices[i].x}, ${vertices[i].y})(${vertices[( i + 1 ) % vertices.length].x}, ${vertices[( i + 1 ) % vertices.length].y}) due to ${e}` );
             }
         }
     }

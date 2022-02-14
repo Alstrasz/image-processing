@@ -1,6 +1,6 @@
 import { MovementPath } from './movement_path';
-import { RightShape } from './right_shape';
 import { Image } from './image';
+import { Shape } from './abstract_shape';
 
 export class Scene {
     delta_rotation: number = 0;
@@ -11,7 +11,7 @@ export class Scene {
     private tick_timeout!: NodeJS.Timeout;
 
     constructor (
-        public shape: RightShape,
+        public shape: Shape,
         public path: MovementPath,
         public image: Image,
     ) {

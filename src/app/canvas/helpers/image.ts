@@ -1,3 +1,8 @@
+export interface Dot {
+    x: number,
+    y: number
+}
+
 export interface PxColor {
     r: number,
     g: number,
@@ -19,17 +24,17 @@ export class Image {
         this.height = this.image_data.height;
     }
 
-    get_pixel ( x: number, y: number ): PxColor {
+    get_pixel ( { x, y }: Dot ): PxColor {
         if ( x >= this.width || y >= this.height || x < 0 || y < 0 ) {
-            throw new Error( `Out of bounds [x, y] [${x},${y}] not in ${this.width}x${this.height}` );
+            throw new Error( `Image: Pixel out of bounds [x, y] [${x},${y}] not in ${this.width}x${this.height}` );
         }
         const pos = y * ( this.width * 4 ) + x * 4;
         return { r: this.data[pos], g: this.data[pos + 1], b: this.data[pos + 2], a: this.data[pos + 3] };
     }
 
-    set_pixel ( x: number, y: number, { r, g, b, a }: PxColor ): void {
+    set_pixel ( { x, y }: Dot, { r, g, b, a }: PxColor ): void {
         if ( x > this.width || y > this.height || x < 0 || y < 0 ) {
-            throw new Error( `Out of bounds [x, y] [${x},${y}] not in ${this.width}x${this.height}` );
+            throw new Error( `Image: Pixel out of bounds [x, y] [${x},${y}] not in ${this.width}x${this.height}` );
         }
         const pos = y * ( this.width * 4 ) + x * 4;
         this.data[pos + 0] = r > 255 ? 255 : ( r < 0 ? 0 : r );
@@ -38,20 +43,20 @@ export class Image {
         this.data[pos + 3] = a > 255 ? 255 : ( a < 0 ? 0 : a );
     }
 
-    get_pixel_gs ( x: number, y: number ): number {
-        const { r, g, b, ..._rest } = this.get_pixel( x, y );
+    get_pixel_gs ( { x, y }: Dot ): number {
+        const { r, g, b, ..._rest } = this.get_pixel( { x, y } );
         return 0.299 * r + 0.587 * g + 0.114 * b;
     };
 
-    set_pixel_gs ( x: number, y: number, gs: number ) {
+    set_pixel_gs ( { x, y }: Dot, gs: number ) {
         gs = gs > 255 ? 255 : ( gs < 0 ? 0 : gs );
-        this.set_pixel( x, y, { r: gs, g: gs, b: gs, a: 255 } );
+        this.set_pixel( { x, y }, { r: gs, g: gs, b: gs, a: 255 } );
     };
 
     fill_gs ( gs: number ): void {
         for ( let i = 0; i < this.width; i++ ) {
             for ( let j = 0; j < this.height; j++ ) {
-                this.set_pixel_gs( i, j, gs );
+                this.set_pixel_gs( { x: i, y: j }, gs );
             }
         }
     }
@@ -91,7 +96,7 @@ export class Image {
         }
     }
 */
-    draw_line ( x1: number, y1: number, x2: number, y2: number, color: PxColor ) {
+    draw_line ( { x: x1, y: y1 }: Dot, { x: x2, y: y2 }: Dot, color: PxColor ) {
         const dx = Math.abs( x1 - x2 );
         const dy = Math.abs( y1 - y2 );
         if ( dy <= dx ) {
@@ -111,7 +116,7 @@ export class Image {
             let x = x1;
             let y = y1;
             let d = dy - Math.floor( dx / 2 );
-            this.set_pixel( x, y, color );
+            this.set_pixel( { x, y }, color );
             while ( x < x2 ) {
                 x += 1;
                 // dx -= 1;
@@ -124,7 +129,7 @@ export class Image {
                     y += 1;
                     // dy -= 1;
                 }
-                this.set_pixel( x, mirrored ? 2 * y1 - y : y, color );
+                this.set_pixel( { x: x, y: mirrored ? 2 * y1 - y : y }, color );
             }
         } else if ( dx <= dy ) {
             if ( y1 > y2 ) {
@@ -143,7 +148,7 @@ export class Image {
             let d = dx - dy / 2;
             let x = x1;
             let y = y1;
-            this.set_pixel( x, y, color );
+            this.set_pixel( { x, y }, color );
             while ( y < y2 ) {
                 y += 1;
                 // dy -= 1;
@@ -156,7 +161,7 @@ export class Image {
                     // console.log( 4 );
                     // dx -= 1;
                 }
-                this.set_pixel( mirrored ? 2 * x1 - x : x, y, color );
+                this.set_pixel( { x: mirrored ? 2 * x1 - x : x, y: y }, color );
             }
             // console.log( x1, x2 );
         }
