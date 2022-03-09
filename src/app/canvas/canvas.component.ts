@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ArbitraryShape } from './helpers/arbitrary_shape';
+import { Point } from './helpers/dot';
 import { Image } from './helpers/image';
 import { MovementPath } from './helpers/movement_path';
 import { Scene } from './helpers/scene';
@@ -37,6 +38,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
         this.scene = new Scene(
             new ArbitraryShape( 6, 50, 0, { x: 50, y: 50 }, { r: 200, g: 0, b: 0, a: 255 } ),
             new MovementPath( { x: 256, y: 256 }, 150, 6, { r: 0, g: 200, b: 0, a: 255 } ),
+            new Point( { x: 256, y: 256 } ),
             this.image_helper,
         );
     }

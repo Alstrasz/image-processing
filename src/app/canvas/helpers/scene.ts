@@ -2,6 +2,7 @@ import { MovementPath } from './movement_path';
 import { Dot, Image } from './image';
 import { Shape } from './abstract_shape';
 import { ArbitraryShape } from './arbitrary_shape';
+import { Point } from './dot';
 
 export class Scene {
     shape_delta_rotation: number = 0;
@@ -21,6 +22,7 @@ export class Scene {
     constructor (
         public shape: Shape,
         public path: MovementPath,
+        public point: Point,
         public image: Image,
     ) {
         this.set_tick_timeout();
@@ -30,10 +32,13 @@ export class Scene {
         this.image.fill_gs( 50 );
         this.shape.draw( this.image );
         this.path.draw( this.image );
+        this.point.draw( this.image );
     }
 
     tick () {
         this.shape_current_rotation += this.shape_delta_rotation;
+        this.shape_current_location = this.path.mod_by_path_length( this.shape_current_location );
+        console.log( this.shape_current_location );
         this.shape_current_location += this.shape_delta_location;
 
         this.path_current_rotation += this.path_delta_rotation;
@@ -77,6 +82,17 @@ export class Scene {
                 this.selected_vertex = {
                     id: s,
                     obj: this.shape,
+                };
+                return;
+            }
+        }
+
+        if ( this.point ) {
+            s = this.point.get_vertex_id_by_pos( pos, 15 );
+            if ( s != null ) {
+                this.selected_vertex = {
+                    id: s,
+                    obj: this.point as unknown as ArbitraryShape,
                 };
                 return;
             }
