@@ -39,7 +39,6 @@ export class Scene {
     tick () {
         this.shape_current_rotation += this.shape_delta_rotation;
         this.shape_current_location = this.path.mod_by_path_length( this.shape_current_location );
-        console.log( this.shape_current_location );
         this.shape_current_location += this.shape_delta_location;
 
         this.path_current_rotation += this.path_delta_rotation;

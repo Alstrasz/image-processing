@@ -32,7 +32,6 @@ export class MovementPath extends ArbitraryShape {
             total_path += len_from_prev;
             this.dots.push( { pos: dots[i], len_from_prev: len_from_prev, len_from_start: total_path } );
         }
-        console.log( this.dots );
     }
 
     mod_by_path_length ( length: number ) {

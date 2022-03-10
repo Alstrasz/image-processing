@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { ArbitraryShape } from './helpers/arbitrary_shape';
 import { Point } from './helpers/dot';
 import { Image } from './helpers/image';
@@ -23,7 +24,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     scene!: Scene;
 
 
-    constructor () { }
+    constructor ( private activated_route: ActivatedRoute ) { }
 
     ngOnInit (): void {
     }
@@ -36,15 +37,30 @@ export class CanvasComponent implements OnInit, AfterViewInit {
             this.context = context;
         }
         this.image_helper = new Image( this.context.getImageData( 0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height ), this.context );
-        this.scene = new Scene(
-            new ArbitraryShape( 6, 50, 0, { x: 50, y: 50 }, { r: 200, g: 0, b: 0, a: 255 } ),
-            new MovementPath( { x: 256, y: 256 }, 150, 6, { r: 0, g: 200, b: 0, a: 255 } ),
-            new Point( { x: 256, y: 256 } ),
-            this.image_helper,
-            ( new_val: boolean ) => {
-                this.is_dot_inside = new_val;
-            },
-        );
+        let resolve: ( value: unknown ) => void;
+        const prom = new Promise<any>( ( res ) => {
+            resolve = res;
+        } );
+        let par: any = {};
+        this.activated_route.queryParams.subscribe( ( params ) => {
+            console.log( 'in sub', params );
+            par = params;
+        } );
+        setTimeout( () => {
+            resolve( {} );
+        }, 400 );
+        prom.then( ( ) => {
+            console.log( 'in prm', par );
+            this.scene = this.scene = new Scene(
+                new ArbitraryShape( par.vs || 6, 50, 0, { x: 50, y: 50 }, { r: 200, g: 0, b: 0, a: 255 } ),
+                new MovementPath( { x: 256, y: 256 }, 150, par.ps || 6, { r: 0, g: 200, b: 0, a: 255 } ),
+                new Point( { x: 256, y: 256 } ),
+                this.image_helper,
+                ( new_val: boolean ) => {
+                    this.is_dot_inside = new_val;
+                },
+            );
+        } );
     }
 
     click_fill () {
