@@ -1,6 +1,9 @@
 <canvas #canvas class="canvas" width="512" height="512" (mousedown)="canvas_mouse_down($event)" (mousemove)="canvas_mouse_move($event)" (mouseup)="canvas_mouse_up($event)" ></canvas>
 <br>
 <p style="color: white;">
+    {{ is_dot_inside ? "Dot in shape" : "Dot not in shape" }}
+</p>
+<p style="color: white;">
     shape_delta_rotation <input type="number" [(ngModel)]="input_1"><br>
     shape_delta_location <input type="number" [(ngModel)]="input_2"><br>
     tick_interval <input type="number" [(ngModel)]="input_3"><br>

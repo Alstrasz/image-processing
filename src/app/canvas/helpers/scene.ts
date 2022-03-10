@@ -1,6 +1,5 @@
 import { MovementPath } from './movement_path';
 import { Dot, Image } from './image';
-import { Shape } from './abstract_shape';
 import { ArbitraryShape } from './arbitrary_shape';
 import { Point } from './dot';
 
@@ -13,6 +12,7 @@ export class Scene {
     path_current_rotation: number = 0;
     tick_interval: number = 16;
     private tick_timeout!: NodeJS.Timeout;
+    previous_dot_intersection_valuse: boolean | null = null;
 
     selected_vertex: {
         id: number | null,
@@ -20,10 +20,11 @@ export class Scene {
     } = { id: null, obj: null };
 
     constructor (
-        public shape: Shape,
+        public shape: ArbitraryShape,
         public path: MovementPath,
         public point: Point,
         public image: Image,
+        public dot_intersection_change_callback: ( new_val: boolean ) => void = () => {},
     ) {
         this.set_tick_timeout();
     }
@@ -47,6 +48,12 @@ export class Scene {
         this.shape.set_pos( this.path.get_pos_on_path( this.shape_current_location ) );
 
         this.path.set_rotation( this.path_current_rotation );
+
+        const dot_intersection_value: boolean = this.is_dot_inside();
+        if ( this.previous_dot_intersection_valuse !== dot_intersection_value ) {
+            this.previous_dot_intersection_valuse = dot_intersection_value;
+            this.dot_intersection_change_callback( dot_intersection_value );
+        }
     }
 
     set_tick_timeout () {
@@ -76,7 +83,7 @@ export class Scene {
             };
             return;
         }
-        if ( this.shape instanceof ArbitraryShape ) {
+        if ( this.shape ) {
             s = this.shape.get_vertex_id_by_pos( pos, 15 );
             if ( s != null ) {
                 this.selected_vertex = {
@@ -113,5 +120,9 @@ export class Scene {
         this.selected_vertex.obj.update_vertex( this.selected_vertex.id, this.selected_vertex.obj.get_vertex_from_pos( pos ) );
         this.selected_vertex.obj = null;
         this.selected_vertex.id = null;
+    }
+
+    is_dot_inside ( ) {
+        return this.shape.is_dot_inside( this.point.pos );
     }
 }

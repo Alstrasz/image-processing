@@ -1,5 +1,5 @@
 import { Shape } from './abstract_shape';
-import { pifagor_distance } from './ev_functions';
+import { pifagor_distance, ray_segment_intersect } from './ev_functions';
 import { Image, PxColor, Dot } from './image';
 
 export interface VertexInfo {
@@ -88,5 +88,26 @@ export class ArbitraryShape implements Shape {
                 }) due to ${e}` );
             }
         }
+    }
+
+    count_ray_intersections ( ray_origin: Dot, ray_point: Dot ) {
+        const dots = this.vertices_to_pos();
+        let ret = 0;
+        for ( let i = 0; i < dots.length; i++ ) {
+            if ( ray_segment_intersect( dots[i], dots[( i + 1 ) % dots.length], ray_origin, ray_point ) ) {
+                ret += 1;
+            }
+        }
+        return ret;
+    }
+
+    is_dot_inside ( pos: Dot ) {
+        let ret: number = 0;
+        for ( let i = -1; i <= 1; i ++ ) {
+            for ( let j = -1; j <= 1; j ++ ) {
+                ret += this.count_ray_intersections( pos, { x: pos.x + i, y: pos.y + j } ) % 2;
+            }
+        }
+        return ret > 3;
     }
 }

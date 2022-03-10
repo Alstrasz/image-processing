@@ -18,6 +18,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     input_2: number = 2;
     input_3: number = 16;
     input_4: number = 0.01;
+    is_dot_inside: boolean = false;
 
     scene!: Scene;
 
@@ -40,6 +41,9 @@ export class CanvasComponent implements OnInit, AfterViewInit {
             new MovementPath( { x: 256, y: 256 }, 150, 6, { r: 0, g: 200, b: 0, a: 255 } ),
             new Point( { x: 256, y: 256 } ),
             this.image_helper,
+            ( new_val: boolean ) => {
+                this.is_dot_inside = new_val;
+            },
         );
     }
 
