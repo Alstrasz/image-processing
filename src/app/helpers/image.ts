@@ -1,3 +1,5 @@
+import { color_neg, pifagor_distance } from './ev_functions';
+
 export interface Dot {
     x: number,
     y: number
@@ -166,6 +168,34 @@ export class Image {
             // console.log( x1, x2 );
         }
     }
+
+    draw_quadratic_bezier_basic ( a: Dot, b: Dot, c: Dot, color: PxColor ) {
+        const iter_num = pifagor_distance( a.x, a.y, b.x, b.y ) + pifagor_distance( c.x, c.y, b.x, b.y );
+        for ( let i = 0; i <= iter_num; i++ ) {
+            const t = i / iter_num;
+            const nt = 1 - t;
+            const x = Math.round( nt * nt * a.x + 2 * nt * t * b.x + t * t * c.x );
+            const y = Math.round( nt * nt * a.y + 2 * nt * t * b.y + t * t * c.y );
+            this.set_pixel( { x, y }, color );
+        }
+    }
+
+    draw_quadratic_bezier ( dots: Array<Dot>, color: PxColor ) {
+        if ( ! ( dots.length >= 3 && ( dots.length - 3 ) % 2 == 0 ) ) {
+            console.error( `Dots length missmatch, expected 3 + 2k, got ${dots.length}` );
+        }
+        for ( let i = 0; i < dots.length - 1; i += 2 ) {
+            this.draw_quadratic_bezier_basic( dots[i], dots[i + 1], dots[i + 2], color );
+        }
+    }
+
+    draw_quadratic_bezier_helper ( dots: Array<Dot>, color: PxColor ) {
+        this.draw_quadratic_bezier( dots, color );
+        for ( let i = 0; i < dots.length - 1; i++ ) {
+            this.draw_line( dots[i], dots[i + 1], color_neg( color ) );
+        }
+    }
+
     apply ( dx: number = 0, dy: number = 0, context?: CanvasRenderingContext2D ) {
         if ( context ) {
             context.putImageData( this.image_data, dx, dy );

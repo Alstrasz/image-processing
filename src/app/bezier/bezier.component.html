@@ -1,0 +1,12 @@
+<p>
+    <canvas #canvas class="canvas" width="512" height="512" (mousedown)="canvas_mouse_down($event)" (mousemove)="canvas_mouse_move($event)" (mouseup)="canvas_mouse_up($event)"></canvas>
+</p>
+<p>Mouse pos: ({{current_pos[0]}}; {{current_pos[1]}})</p>
+<p>{{curves_stringed}}</p>
+<p>
+    <input type="checkbox" [(ngModel)]="with_helpers">With helpers<br>
+    selected curve <input type="number" [(ngModel)]="selected_curve"><br>
+    <button (click)="add_points()">add_points</button>
+    <button (click)="remove_points()">remove_points</button>
+    <button (click)="add_curve()">add_curve</button>
+</p>

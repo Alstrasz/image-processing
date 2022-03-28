@@ -1,10 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ArbitraryShape } from './helpers/arbitrary_shape';
-import { Point } from './helpers/dot';
-import { Image } from './helpers/image';
-import { MovementPath } from './helpers/movement_path';
-import { Scene } from './helpers/scene';
+import { ArbitraryShape } from '../helpers/arbitrary_shape';
+import { Point } from '../helpers/dot';
+import { Image } from '../helpers/image';
+import { MovementPath } from '../helpers/movement_path';
+import { Scene } from '../helpers/scene';
 
 @Component( {
     selector: 'app-canvas',

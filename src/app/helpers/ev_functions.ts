@@ -1,4 +1,4 @@
-import { Dot } from './image';
+import { Dot, PxColor } from './image';
 
 export function pifagor_distance ( x1: number, y1: number, x2: number, y2: number ): number {
     return Math.sqrt( ( x1 - x2 ) * ( x1 - x2 ) + ( y1 - y2 ) * ( y1 - y2 ) );
@@ -57,4 +57,8 @@ export function ray_segment_intersect ( s1: Dot, s2: Dot, ray_origin: Dot, ray_p
         }
     }
     return true;
+}
+
+export function color_neg ( { r, g, b, a }: PxColor ): PxColor {
+    return { r: 255 - r, g: 255 - g, b: 255 - b, a: a };
 }
