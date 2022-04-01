@@ -5,6 +5,12 @@ export interface Dot {
     y: number
 }
 
+export interface Dot3d {
+    x: number,
+    y: number,
+    z: number,
+}
+
 export interface PxColor {
     r: number,
     g: number,

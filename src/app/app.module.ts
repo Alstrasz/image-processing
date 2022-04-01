@@ -6,12 +6,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CanvasComponent } from './canvas/canvas.component';
 import { BezierComponent } from './bezier/bezier.component';
+import { BaseComponent } from './base/base.component';
+import { Canvas3dComponent } from './canvas3d/canvas3d.component';
 
 @NgModule( {
     declarations: [
         AppComponent,
         CanvasComponent,
         BezierComponent,
+        BaseComponent,
+        Canvas3dComponent,
     ],
     imports: [
         BrowserModule,

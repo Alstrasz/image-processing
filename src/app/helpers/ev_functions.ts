@@ -1,7 +1,11 @@
-import { Dot, PxColor } from './image';
+import { Dot, Dot3d, PxColor } from './image';
 
 export function pifagor_distance ( x1: number, y1: number, x2: number, y2: number ): number {
     return Math.sqrt( ( x1 - x2 ) * ( x1 - x2 ) + ( y1 - y2 ) * ( y1 - y2 ) );
+}
+
+export function pifagor_distance3d ( { x: x1, y: y1, z: z1 }: Dot3d, { x: x2, y: y2, z: z2 }: Dot3d ): number {
+    return Math.sqrt( ( x1 - x2 ) * ( x1 - x2 ) + ( y1 - y2 ) * ( y1 - y2 ) + ( z1 - z2 ) * ( z1 - z2 ) );
 }
 
 export function line_intersect ( { x: x1, y: y1 }: Dot, { x: x2, y: y2 }: Dot, { x: x3, y: y3 }: Dot, { x: x4, y: y4 }: Dot ): Dot {
