@@ -14,6 +14,12 @@ export class Canvas3dComponent implements OnInit {
     image_helper!: Image;
     scene!: Scene3d;
 
+    rotations = {
+        x: 0,
+        y: 0,
+        z: 0,
+    };
+
     constructor () {
     }
 
@@ -29,5 +35,9 @@ export class Canvas3dComponent implements OnInit {
         }
         this.image_helper = new Image( this.context.getImageData( 0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height ), this.context );
         this.scene = new Scene3d( { x: 256, y: 256 }, 20, [new Cube( { x: 0, y: 0, z: 0 }, 5, { r: 255, g: 0, b: 0, a: 255 } )], this.image_helper );
+    }
+
+    apply () {
+        this.scene.rotation = this.rotations;
     }
 }

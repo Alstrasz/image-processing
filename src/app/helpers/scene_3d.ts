@@ -4,6 +4,7 @@ import { Dot, Dot3d, Image } from './image';
 export class Scene3d {
     private tick_timeout!: NodeJS.Timeout;
     tick_interval: number = 16;
+    rotation: { x: number, y: number, z: number } = { x: 0, y: 0, z: 0 };
 
     constructor (
         public center: Dot,
@@ -15,7 +16,7 @@ export class Scene3d {
     }
 
     project_dot ( dot: Dot3d ): Dot {
-        return { x: Math.round( dot.x * this.scale + this.center.x ), y: Math.round( dot.y * this.scale + this.center.y ) };
+        return { x: Math.round( 10 / ( 10 + dot.z ) * ( dot.x * this.scale + 20 ) + this.center.x ), y: Math.round( 10 / ( 10 + dot.z ) * ( dot.y * this.scale + 40 ) + this.center.y ) };
     }
 
     draw ( ) {
@@ -27,7 +28,7 @@ export class Scene3d {
     }
 
     draw_axis () {
-        const dots_2d = [{ x: 0, y: 0, z: 0 }, { x: 10, y: 0, z: 0 }, { x: 0, y: 10, z: 0 }, { x: 0, y: 0, z: 10 }].map( this.project_dot.bind( this ) );
+        const dots_2d = [{ x: 0, y: 0, z: 0 }, { x: 10, y: 0, z: 0 }, { x: 0, y: -10, z: 0 }, { x: 0, y: 0, z: 10 }].map( this.project_dot.bind( this ) );
         try {
             this.image.draw_line( dots_2d[0], dots_2d[1], { r: 0, g: 255, b: 0, a: 255 } );
         } catch ( err ) {
@@ -47,7 +48,7 @@ export class Scene3d {
 
     tick () {
         for ( const shape of this.shapes ) {
-            shape.rotate( 0.01, 0.01 );
+            shape.rotate( this.rotation.x, this.rotation.y, this.rotation.z );
         }
     }
 

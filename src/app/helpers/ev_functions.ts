@@ -66,3 +66,30 @@ export function ray_segment_intersect ( s1: Dot, s2: Dot, ray_origin: Dot, ray_p
 export function color_neg ( { r, g, b, a }: PxColor ): PxColor {
     return { r: 255 - r, g: 255 - g, b: 255 - b, a: a };
 }
+
+export function matrix_mutliply ( a: Array<Array<number>>, b: Array<Array<number>> ) {
+    if ( !Array.isArray( a ) || !Array.isArray( b ) || !a.length || !b.length ) {
+        throw new Error( 'arguments should be in 2-dimensional array format' );
+    }
+    const x = a.length;
+    const z = a[0].length;
+    const y = b[0].length;
+    if ( b.length !== z ) {
+        // XxZ & ZxY => XxY
+        throw new Error( 'number of columns in the first matrix should be the same as the number of rows in the second' );
+    }
+    // eslint-disable-next-line prefer-spread
+    const productRow = Array.apply( null, new Array( y ) ).map( Number.prototype.valueOf, 0 );
+    const product = new Array( x );
+    for ( let p = 0; p < x; p++ ) {
+        product[p] = productRow.slice();
+    }
+    for ( let i = 0; i < x; i++ ) {
+        for ( let j = 0; j < y; j++ ) {
+            for ( let k = 0; k < z; k++ ) {
+                product[i][j] += a[i][k] * b[k][j];
+            }
+        }
+    }
+    return product;
+}

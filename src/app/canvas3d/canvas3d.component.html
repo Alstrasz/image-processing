@@ -1,1 +1,4 @@
 <canvas #canvas class="canvas" width="512" height="512"></canvas><br>
+<p><input type="range" [(ngModel)]='rotations.x' min="-0.2" max="0.2" value="0" step="0.01" (ngModelChange)="apply()">{{rotations.x}}</p>
+<p><input type="range" [(ngModel)]='rotations.y' min="-0.2" max="0.2" value="0" step="0.01" (ngModelChange)="apply()">{{rotations.y}}</p>
+<p><input type="range" [(ngModel)]='rotations.z' min="-0.2" max="0.2" value="0" step="0.01" (ngModelChange)="apply()">{{rotations.z}}</p>
